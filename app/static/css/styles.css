@@ -1,0 +1,26 @@
+* p{
+  font-size: 17px;
+}
+
+/*login and register templates*/
+.login-register{
+  font-size: 17px;
+}
+.login-register .buttons{
+  font-size: 14px;
+  border-radius: 40px;
+  width: 100px;
+  height: 40px;
+}
+
+/*index template*/
+.blog-content{
+  display: flex;
+ flex-wrap: wrap;
+}
+.card{
+  width: 350px;
+  height: 100%;
+  padding: 7px;
+  margin: 5px 5px;
+}
