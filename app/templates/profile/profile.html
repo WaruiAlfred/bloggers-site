@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+<div class="row">
+ 
+  <div class="col-md-2"></div>
+  <div class="col-md-4">
+    <!--Display profile photo-->
+    {% if user.profile_pic_path %}
+      <img src="{{url_for('static',filename=user.profile_pic_path)}}" alt="" class="img-thumbnail" style="border-radius:50%;height:400px;width:400px;margin-bottom:5px;">
+    {%else%}
+      <p>No profile picture</p>
+    {% endif %}
+
+    <!--Adding a profie picture-->
+    {% if user == current_user%}
+      <form action="{{url_for('main.update_pic',uname=user.username)}}" method="post" enctype="multipart/form-data">
+        <input type="file" name="photo" class="form-control" required>
+        <input type="submit">
+      </form>
+    {% endif %}
+
+  </div>
+
+  <div class="col-md-4">
+    <!-- displaying  Username-->
+    <h3> {{user.username| capitalize}} </h3>
+
+    <!--Displaying user biodata-->
+    {% if user.biodata %}
+      <p> {{user.biodata}}</p>
+    {%else%}
+      <p> {{user.username| capitalize}} has no bio </p>
+    {% endif %}
+
+    <!--Redirection to edit profile after authentication-->
+    {% if user == current_user %}
+      <a href="{{url_for('main.update_profile',uname=user.username)}}">Edit profile</a>
+    {% endif %}
+
+    <!--Displaying user's blogs-->
+    <h1 class="text-center">Your Blogs</h1>
+    <div class="card">
+      {%for blog in blogs %}
+        <div class="card-title d-flex justify-content-between">
+          <h3><b>{{blog.title}}</b></h3>
+          <div><span class="badge rounded-pill bg-success">Update</span>&nbsp;<a href="{{url_for('main.delete_blog',id=blog.id)}}"><span class="badge rounded-pill bg-danger">Delete</span></a></div>
+        </div>
+        <p>{{blog.blog}}</p>
+        <p class="card-footer" style="font-size:12px;">Submitted on:{{blog.submitted}}</p>
+        <hr>
+      {%endfor%}
+    </div>
+  </div>
+  <div class="col-md-2"></div>
+</div>
+</div>
+{% endblock %}
