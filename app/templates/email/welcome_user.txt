@@ -1,0 +1,3 @@
+Hello {{user.username}}
+Welcome to Impression in 60 seconds
+You are officially a signed up user of our application. You can enjoy the privileges of submitting a pitch and commenting on others'.

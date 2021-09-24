@@ -45,10 +45,10 @@
       {%for blog in blogs %}
         <div class="card-title d-flex justify-content-between">
           <h3><b>{{blog.title}}</b></h3>
-          <div><span class="badge rounded-pill bg-success">Update</span>&nbsp;<a href="{{url_for('main.delete_blog',id=blog.id)}}"><span class="badge rounded-pill bg-danger">Delete</span></a></div>
+          <div><a href="{{url_for('main.update_blog',id=blog.id)}}"><span class="badge rounded-pill bg-success">Update</span></a>&nbsp;<a href="{{url_for('main.delete_blog',id=blog.id)}}"><span class="badge rounded-pill bg-danger">Delete</span></a></div>
         </div>
         <p>{{blog.blog}}</p>
-        <p class="card-footer" style="font-size:12px;">Submitted on:{{blog.submitted}}</p>
+        <p class="card-footer" style="font-size:12px;">Submitted on:{{blog.submitted.strftime('%d-%m-%Y')}}</p>
         <hr>
       {%endfor%}
     </div>

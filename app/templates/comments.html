@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% import "bootstrap/wtf.html" as wtf  %}
+
+{% block content %}
+  <div class="container">
+    <!--Displaying the pitch to leave a comment for-->
+    <div class="row">
+      <div class="col-md-8">
+        <div class="card ml-auto mr-auto">
+          <h3 class="card-title">Posted by: {{blog.user.username}}</h3>
+          <div class="card-body">
+            <h4 class="text-center"><b>{{blog.title}}</b></h4>
+            <p>{{blog.blog}}</p>
+          </div>
+          <div class="card-footer" style="font-size:14px;">
+            <small>Submitted on: {{blog.submitted}}</small>
+          </div>
+        </div>
+        <!--Displaying comments-->
+        <div class="comments" style="background-color: grey;border-radius:30px;padding:10px;">
+          <h1 class="text-center">Comments</h1>
+          {%for comments in comments_found%}
+            <ul>
+              <li>{{comments.comment}}</li>&nbsp;&nbsp;<a href="{{url_for('main.delete_comment',id=comments.id)}}"><i class="fa fa-trash" style="color:red;"></i></a>
+            </ul>
+          {%endfor%}
+        </div>
+      </div>
+      <!--Comments form-->
+      <div class="col-md-4">
+        {{wtf.quick_form(comments_form)}}
+      </div>
+    </div>
+  </div>
+{% endblock  %}

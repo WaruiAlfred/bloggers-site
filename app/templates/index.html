@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+<!--Page content section-->
+{% block content%}
+  <div class="container">
+    <figure>
+      <blockquote class="blockquote">
+        <p>{{quotes.quote}}</p>
+      </blockquote>
+      <figcaption class="blockquote-footer">
+        <cite title="Source Title">{{quotes.author}}</cite>
+      </figcaption>
+    </figure>
+    <div class="blog-content ">
+      {% for blog_item in blogs %}
+        <div class="">
+          <div class="card">
+            {% if blog_item.user.profile_pic_path %}
+              <img class="rounded-circle ml-2 writer-img" src="{{url_for('static',filename=blog_item.user.profile_pic_path)}}" alt="">
+            {% else %}
+              <img class="rounded-circle ml-2 writer-img" src="{{url_for('static',filename='images/empty-avatar.jpeg')}}">
+            {% endif %}&nbsp;
+            <h3 class="card-title">Posted by: {{blog_item.user.username}}</h3>
+            <div class="card-body">
+              <h4 class="text-center"><b>{{blog_item.title}}</b></h4>
+              <p>{{blog_item.blog}}</p>
+            </div>
+            <div class="card-footer" style="font-size:14px;">
+              <small>Submitted on: {{blog_item.submitted.strftime('%d-%m-%Y')}}</small>&nbsp;<span class="badge rounded-pill bg-info text-dark ml-5"><a class="" href="/comments/{{blog_item.id}}">Comment</a></span>
+            </div>
+          </div>
+        </div>
+      {% endfor %} 
+    <div>
+  </div>
+{% endblock %}
