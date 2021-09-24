@@ -1,5 +1,5 @@
 import re
-from flask import render_template,request,redirect,url_for,abort
+from flask import render_template,request,redirect,url_for,abort,flash
 from . import main
 from ..models import User,Blogs,Comments
 from flask_login import login_required,current_user
@@ -14,9 +14,9 @@ def  index():
   '''
   Function that returns the home page
   '''
-  blogs_found = Blogs.get_blogs()
+  blogs_found = Blogs.query.order_by(Blogs.submitted.desc()).all()
   quotes = get_quotes()
-  title = ""
+  title = "Bloggers Site"
   return render_template('index.html',title = title, blogs = blogs_found, quotes = quotes)
   
 @main.route('/user/<uname>')
@@ -70,7 +70,7 @@ def new_blog():
     return redirect(url_for('.index'))
   
   title="Blog input"
-  return render_template('new_blog.html',title = title, form = form)
+  return render_template('new_blog.html',title = title, form = form,legend = 'New Blog')
 
 @main.route('/comments/<int:id>',methods = ['GET','POST'])
 def new_comment(id): 
@@ -90,7 +90,7 @@ def new_comment(id):
   title = 'Comments'
   return render_template('comments.html', title = title, comments_form = form, blog = blog,comments_found = comments_found)
 
-@main.route('/deletecomment/<int:id>',methods = ['GET','POST'])
+@main.route('/deletecomment/<int:id>',methods = ['GET','DELETE'])
 @login_required
 def delete_comment(id): 
   '''Function to delete a comment'''
@@ -102,7 +102,29 @@ def delete_comment(id):
     abort(404)
   return redirect(url_for('.new_comment', id = comment.blog_id))
 
-@main.route('/deleteblog/<int:id>',methods = ['GET','POST'])
+@main.route('/updateblog/<int:id>',methods = ['GET','POST'])
+@login_required
+def update_blog(id): 
+  '''Function to update a blog'''
+  blog = Blogs.query.get_or_404(id)
+  # if blog.user_id is not current_user: 
+  #   abort(403)
+  form = BlogForm()
+  if form.validate_on_submit(): 
+    blog.title = form.title.data 
+    blog.blog = form.blog.data
+    
+    db.session.commit()
+    # flash('Your blog has been updated!')
+    return redirect(url_for('.profile', uname = blog.user.username))
+  elif request.method == 'GET': 
+    form.title.data = blog.title 
+    form.blog.data = blog.blog
+    
+  return render_template('new_blog.html', form = form,legend = 'Update Blog')
+  
+
+@main.route('/deleteblog/<int:id>',methods = ['GET','DELETE'])
 @login_required
 def delete_blog(id): 
   '''Function to delete a blog'''
