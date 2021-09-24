@@ -16,11 +16,15 @@
 /*index template*/
 .blog-content{
   display: flex;
- flex-wrap: wrap;
+  flex-wrap: wrap;
 }
 .card{
   width: 350px;
   height: 100%;
   padding: 7px;
   margin: 5px 5px;
+}
+.writer-img{
+  height: 60px;
+  width: 60px;
 }
