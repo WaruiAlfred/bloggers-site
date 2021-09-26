@@ -24,13 +24,13 @@ class ProdConfig(Config):
   '''
   Test configuration child class
   '''
-  pass
+  SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
 
 class TestConfig(Config): 
   '''
   Production configuration child class
   '''
-  pass
+  SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://toshiba:@localhost/blogs_test'
 
 class DevConfig(Config): 
   '''
