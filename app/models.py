@@ -48,19 +48,12 @@ class Blogs(db.Model):
   
   user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
   comments = db.relationship('Comments', backref = 'blog', lazy = "dynamic")
-  upvote = db.relationship('Upvote', backref='blog', lazy='dynamic')
-  downvote = db.relationship('Downvote', backref='blog', lazy='dynamic')
     
   def save_blog(self):
     '''Method to save  blogs'''
     db.session.add(self)
     db.session.commit()
 
-  @classmethod
-  def get_blogs(self):
-    '''Method to retrieve blogs'''
-    blogs = Blogs.query.all()
-    return blogs
   
   def __repr__(self): 
     return f'Blog {self.id} > {self.blog}'
@@ -90,48 +83,15 @@ class Comments(db.Model):
   def __repr__(self): 
     return f'Comment {self.blog_id} > {self.comment}'
   
-#votes
-  
-class Upvote(db.Model):
-  __tablename__ = 'upvotes'
-
-  id = db.Column(db.Integer, primary_key=True)
-  blog_id = db.Column(db.Integer,db.ForeignKey('blogs.id'),nullable = False)
-
-  def save(self):
-    db.session.add(self)
-    db.session.commit()
-
-  @classmethod
-  def get_upvotes(cls,id):
-    upvote = Upvote.query.filter_by(blog_id=id).all()
-
-    return upvote
-
-  def __repr__(self):
-    return f'Blog id:{self.blog_id}'
-
-class Downvote(db.Model):
-  __tablename__ = 'downvotes'
-
-  id = db.Column(db.Integer, primary_key=True)
-  blog_id = db.Column(db.Integer,db.ForeignKey('blogs.id'),nullable = False)
-
-  def save(self):
-    db.session.add(self)
-    db.session.commit()
-
-  @classmethod
-  def get_downvotes(cls,id):
-    downvote = Downvote.query.filter_by(blog_id=id).all()
-
-    return downvote
-
-  def __repr__(self):
-    return f'Blog id:{self.blog_id}'
-  
+#quote model 
 class Quotes: 
   '''Class to display random quotes'''
   def __init__(self,author,quote):
     self.author = author
     self.quote = quote
+    
+#subscribers model
+class Subscribers(db.Model): 
+  '''Class to hold subscribers emails'''
+  id = db.Column(db.Integer,primary_key = True)
+  email = db.Column(db.String(255),unique = True,index = True,nullable=False)

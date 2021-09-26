@@ -2,35 +2,70 @@
 
 <!--Page content section-->
 {% block content%}
-  <div class="container">
-    <figure>
-      <blockquote class="blockquote">
-        <p>{{quotes.quote}}</p>
-      </blockquote>
-      <figcaption class="blockquote-footer">
-        <cite title="Source Title">{{quotes.author}}</cite>
-      </figcaption>
-    </figure>
-    <div class="blog-content ">
-      {% for blog_item in blogs %}
-        <div class="">
-          <div class="card">
-            {% if blog_item.user.profile_pic_path %}
-              <img class="rounded-circle ml-2 writer-img" src="{{url_for('static',filename=blog_item.user.profile_pic_path)}}" alt="">
-            {% else %}
-              <img class="rounded-circle ml-2 writer-img" src="{{url_for('static',filename='images/empty-avatar.jpeg')}}">
-            {% endif %}&nbsp;
-            <h3 class="card-title">Posted by: {{blog_item.user.username}}</h3>
-            <div class="card-body">
-              <h4 class="text-center"><b>{{blog_item.title}}</b></h4>
-              <p>{{blog_item.blog}}</p>
-            </div>
-            <div class="card-footer" style="font-size:14px;">
-              <small>Submitted on: {{blog_item.submitted.strftime('%d-%m-%Y')}}</small>&nbsp;<span class="badge rounded-pill bg-info text-dark ml-5"><a class="" href="/comments/{{blog_item.id}}">Comment</a></span>
+  <div class="container-fluid">
+    <h1 class="text-center mt-0 quote-header">Be inspired...</h1>
+    <div class="mt-0 quote-section">
+      <figure>
+        <blockquote class="blockquote">
+          <p class="text-center">{{quotes.quote}}</p>
+        </blockquote>
+        <figcaption class="blockquote-footer text-center">
+          <cite title="Source Title" class="ml-5">~{{quotes.author}}</cite>
+        </figcaption>
+      </figure>
+    </div>
+    <!--Blog section-->
+    <div class="blog-section" style="background: url({{url_for('static',filename='images/blog.png')}}) no-repeat 0px 0px;background-size: cover;position:relative;">
+      <div class="blog-section-color">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="blogs-heading ">
+              <h1>Blogs</h1>
+              <p>Displayed according to the latest blog</p>
             </div>
           </div>
+          <div class="col-md-4 mt-5">
+            <p class="text-white">Subscribe to receive email updates on new blog uploads.</p>
+            <form action="{{ url_for('main.subscribe')}}" class="subscriber mr-3">
+              <div class="input-group">
+                <input type="email" class="form-control" placeholder="Your Email" name="email" required>
+                <div class="input-group-append">
+                  <button class="btn" type="submit">
+                    <i class="fa fa-envelope text-black"></i>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
-      {% endfor %} 
-    <div>
+        <div class="blog-content ml-5">
+          {% for blog_item in blogs %}
+            <div class="mb-3 ">
+              <div class="card">
+                <div class="row">
+                  <div class="col-md-2">
+                    {% if blog_item.user.profile_pic_path %}
+                      <img class="rounded-circle ml-2 writer-img" src="{{url_for('static',filename=blog_item.user.profile_pic_path)}}" alt="">
+                    {% else %}
+                      <img class="rounded-circle ml-2 writer-img" src="{{url_for('static',filename='images/empty-avatar.jpeg')}}">
+                    {% endif %}
+                  </div>
+                  <div class="col-md-8 ml-3">
+                    <h3 class="card-title">Posted by: {{blog_item.user.username}}</h3>
+                    <div class="card-body">
+                      <h4 class="text-center"><b>{{blog_item.title}}</b></h4>
+                      <p>{{blog_item.blog|truncate(30)}}</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer" style="font-size:14px;">
+                  <small>Submitted on: {{blog_item.submitted.strftime('%d-%m-%Y')}}</small>&nbsp;<span class="badge rounded-pill bg-info text-dark comment-section"><a  href="/comments/{{blog_item.id}}">Comment & Read more</a></span>
+                </div>
+              </div>
+            </div>
+          {% endfor %} 
+        </div>
+      </div>
+    </div>
   </div>
 {% endblock %}

@@ -1,11 +1,11 @@
-import re
 from flask import render_template,request,redirect,url_for,abort,flash
 from . import main
-from ..models import User,Blogs,Comments
+from ..models import User,Blogs,Comments,Subscribers
 from flask_login import login_required,current_user
 from .forms import UpdateProfile,BlogForm,CommentsForm
 from .. import db,photos
 from ..quotes import get_quotes
+from ..email import mail_message
 
 
 # Views functions
@@ -27,7 +27,7 @@ def profile(uname):
     abort(404)
    
   blogs = Blogs.query.filter_by(user_id = user.id) 
-  return render_template("profile/profile.html",user = user,blogs = blogs)
+  return render_template("profile/profile.html",title = "User's profile page",user = user,blogs = blogs)
 
 @main.route('/user/<uname>/update',methods = ['GET','POST'])
 @login_required
@@ -67,8 +67,14 @@ def new_blog():
   if form.validate_on_submit(): 
     new_blog = Blogs(title = form.title.data,blog = form.blog.data,user = current_user)
     new_blog.save_blog()
+
+    subscribers=Subscribers.query.order_by(Subscribers.id.desc())
+    for sub in subscribers:
+      mail_list=sub.email
+    mail_message("Bloggers Site Blog Update","email/update_user",mail_list)
     return redirect(url_for('.index'))
-  
+
+    
   title="Blog input"
   return render_template('new_blog.html',title = title, form = form,legend = 'New Blog')
 
@@ -135,21 +141,16 @@ def delete_blog(id):
   else: 
     abort(404)
   return redirect(url_for('.profile', uname = blogs.user.username))
-
-# @main.route('/like/<int:id>', methods = ['POST', 'GET'])
-# def like(id):
-#     get_pitches = Upvote.get_upvotes(id)
-#     for pitch in get_pitches:
-#       continue
-#     new_vote = Upvote( pitch_id=id)
-#     new_vote.save()     
-#     return redirect(url_for('main.index'))    
-
-# @main.route('/dislike/<int:id>', methods = ['POST','GET'])
-# def dislike(id):
-#     get_pitch = Downvote.get_downvotes(id)
-#     for pitch in get_pitch:
-#       continue
-#     new_downvote = Downvote(pitch_id=id)
-#     new_downvote.save()     
-#     return redirect(url_for('main.index'))  
+ 
+#site subscribers
+@main.route('/subscribe', methods=['GET', 'POST'])
+def subscribe():
+  """
+    function that adds a subscriber to be receiving emails when new posts are created
+  """
+  email = request.args.get('email')
+  new_subscriber = Subscribers(email=email)
+  db.session.add(new_subscriber)
+  db.session.commit()
+  print(new_subscriber.email)
+  return redirect(url_for('main.index'))

@@ -2,32 +2,43 @@
 {% import "bootstrap/wtf.html" as wtf  %}
 
 {% block content %}
-  <div class="container">
+  <div class="container comment-template">
     <!--Displaying the pitch to leave a comment for-->
     <div class="row">
       <div class="col-md-8">
-        <div class="card ml-auto mr-auto">
-          <h3 class="card-title">Posted by: {{blog.user.username}}</h3>
-          <div class="card-body">
-            <h4 class="text-center"><b>{{blog.title}}</b></h4>
-            <p>{{blog.blog}}</p>
+        <div class="card" style="width:auto;">
+          <div class="row">
+            <div class="col-md-2">
+              {% if blog.user.profile_pic_path %}
+                <img class="rounded-circle ml-2 writer-img" src="{{url_for('static',filename=blog.user.profile_pic_path)}}" alt="">
+              {% else %}
+                <img class="rounded-circle ml-2 writer-img" src="{{url_for('static',filename='images/empty-avatar.jpeg')}}">
+              {% endif %}
+            </div>
+            <div class="col-md-8 ml-3">
+              <h3 class="card-title">Posted by: {{blog.user.username}}</h3>
+              <div class="card-body">
+                <h4 class="text-center"><b>{{blog.title}}</b></h4>
+                <p>{{blog.blog}}</p>
+              </div>
+            </div>
           </div>
           <div class="card-footer" style="font-size:14px;">
-            <small>Submitted on: {{blog.submitted}}</small>
+            <small>Submitted on: {{blog.submitted.strftime('%d-%m-%Y')}}</small>
           </div>
         </div>
         <!--Displaying comments-->
-        <div class="comments" style="background-color: grey;border-radius:30px;padding:10px;">
+        <div class="comments mt-0" style="background-color: grey;border-radius:30px;padding:10px;">
           <h1 class="text-center">Comments</h1>
           {%for comments in comments_found%}
-            <ul>
-              <li>{{comments.comment}}</li>&nbsp;&nbsp;<a href="{{url_for('main.delete_comment',id=comments.id)}}"><i class="fa fa-trash" style="color:red;"></i></a>
+            <ul class="d-flex">
+              <li>{{comments.comment}}</li>&nbsp;<span class="ml-2"><a href="{{url_for('main.delete_comment',id=comments.id)}}"><i class="fa fa-trash" style="color:red;"></i></a></span>
             </ul>
           {%endfor%}
         </div>
       </div>
       <!--Comments form-->
-      <div class="col-md-4">
+      <div class="col-md-4 comment-form">
         {{wtf.quick_form(comments_form)}}
       </div>
     </div>

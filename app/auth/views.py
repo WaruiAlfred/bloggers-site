@@ -4,7 +4,6 @@ from ..models import User
 from .forms import RegistrationForm,LoginForm
 from .. import db
 from flask_login import login_user,logout_user,login_required
-from ..email import mail_message
 
 #View functions
 #Login route
@@ -32,9 +31,7 @@ def register():
     db.session.add(user)
     db.session.commit()
     
-    flash(f'Account created for {form.username.data}!')
-    
-    
+    flash(f'Account created for {user.username}!')
     
     return redirect(url_for('auth.login'))
     title = "New User Account"

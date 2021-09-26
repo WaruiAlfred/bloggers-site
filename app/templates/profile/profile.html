@@ -3,12 +3,10 @@
 {% block content %}
 <div class="container">
 <div class="row">
- 
-  <div class="col-md-2"></div>
   <div class="col-md-4">
     <!--Display profile photo-->
     {% if user.profile_pic_path %}
-      <img src="{{url_for('static',filename=user.profile_pic_path)}}" alt="" class="img-thumbnail" style="border-radius:50%;height:400px;width:400px;margin-bottom:5px;">
+      <img src="{{url_for('static',filename=user.profile_pic_path)}}" alt="" class="img-thumbnail" style="border-radius:50%;height:300px;width:300px;margin-bottom:5px;">
     {%else%}
       <p>No profile picture</p>
     {% endif %}
@@ -20,12 +18,9 @@
         <input type="submit">
       </form>
     {% endif %}
-
-  </div>
-
-  <div class="col-md-4">
-    <!-- displaying  Username-->
-    <h3> {{user.username| capitalize}} </h3>
+    <!-- displaying  Username and email-->
+    <h3 class="text-center"> {{user.username| capitalize}} </h3>
+    <p>Email address:  <span style="background-color:gray;">{{user.user_email}}</span></p>
 
     <!--Displaying user biodata-->
     {% if user.biodata %}
@@ -39,21 +34,28 @@
       <a href="{{url_for('main.update_profile',uname=user.username)}}">Edit profile</a>
     {% endif %}
 
+  </div>
+
+  <div class="col-md-8">
     <!--Displaying user's blogs-->
-    <h1 class="text-center">Your Blogs</h1>
-    <div class="card">
+    <h1 class="text-center user-blogs">Your Blogs</h1>
+    <hr>
+    <div class="blog-content ">
       {%for blog in blogs %}
-        <div class="card-title d-flex justify-content-between">
-          <h3><b>{{blog.title}}</b></h3>
-          <div><a href="{{url_for('main.update_blog',id=blog.id)}}"><span class="badge rounded-pill bg-success">Update</span></a>&nbsp;<a href="{{url_for('main.delete_blog',id=blog.id)}}"><span class="badge rounded-pill bg-danger">Delete</span></a></div>
+        <div class="mb-3">
+          <div class="card" style="width:350px;">
+            <div class="card-title d-flex justify-content-between">
+              <h3><b>{{blog.title}}</b></h3>
+              <div><a href="{{url_for('main.update_blog',id=blog.id)}}"><span class="badge rounded-pill bg-success blog-action">Update</span></a>&nbsp;<a href="{{url_for('main.delete_blog',id=blog.id)}}"><span class="badge rounded-pill bg-danger blog-action">Delete</span></a></div>
+            </div>
+            <p>{{blog.blog}}</p>
+            <p class="card-footer" style="font-size:12px;">Submitted on:{{blog.submitted.strftime('%d-%m-%Y')}}</p>
+            <hr>
+          </div>
         </div>
-        <p>{{blog.blog}}</p>
-        <p class="card-footer" style="font-size:12px;">Submitted on:{{blog.submitted.strftime('%d-%m-%Y')}}</p>
-        <hr>
       {%endfor%}
     </div>
   </div>
-  <div class="col-md-2"></div>
 </div>
 </div>
 {% endblock %}
